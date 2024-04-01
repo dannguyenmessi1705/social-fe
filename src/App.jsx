@@ -10,6 +10,7 @@ import User from "./page/User";
 import Signin from "./page/Signin";
 import Signup from "./page/Signup";
 import PageNotFound from "./page/PageNotFound";
+import ProtectRoute from "./ui/ProtectRoute";
 
 function App() {
   const queryClient = new QueryClient({
@@ -28,7 +29,13 @@ function App() {
       />
       <BrowserRouter>
         <Routes>
-          <Route element={<AppLayout />}>
+          <Route
+            element={
+              <ProtectRoute>
+                <AppLayout />
+              </ProtectRoute>
+            }
+          >
             <Route index element={<Navigate replace to="/post" />} />
             <Route path="/post" element={<Post />} />
             <Route path="/chat" element={<Chat />} />
