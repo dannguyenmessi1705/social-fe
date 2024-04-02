@@ -3,7 +3,9 @@ import styled from "styled-components";
 import PostModel from "./PostModel";
 import ReactPlayer from "react-player";
 import Comment from "./Comment";
+import Spinner from "./Spinner";
 import useUser from "../features/authentication/useUser";
+import useGetAllPost from "../features/post/useGetAllPost";
 
 import { API_URL } from "../utils/constants";
 
@@ -11,11 +13,15 @@ import { API_URL } from "../utils/constants";
 
 const Main = () => {
   const { user, isLoading } = useUser();
-  const [posts, setPosts] = useState([]);
+  const { posts, isLoadingPosts } = useGetAllPost();
+  console.log(posts);
+  const [posts1, setPosts1] = useState([]);
   const [showModel, setShowModel] = useState(false);
   const [showComments, setShowComments] = useState([]);
   const [showEditPost, setShowEditPost] = useState(false);
   const [load, setLoad] = useState("");
+
+  if (isLoadingPosts) return <Spinner />;
 
   const hideModel = () => {
     setShowModel(false);
@@ -83,7 +89,7 @@ const Main = () => {
   //           arr.push({ post: doc.data(), postID: doc.id });
   //         });
 
-  //         setPosts(arr);
+  //         setPosts1(arr);
   //       });
   //     };
   //     getPosts();
@@ -133,25 +139,25 @@ const Main = () => {
       )}
 
       {posts.length > 0 &&
-        posts.map(({ post, postID }, id) => (
-          <Article key={id}>
+        posts.map((post) => (
+          <Article key={post.postId}>
             <Actor>
               <a href="/feed">
-                <img src={post.user.photo} alt="user" />
+                <img src="" alt="user" />
                 <div className="info">
-                  <h6 className="name">{post.user.name}</h6>
-                  <span className="title">{post.user.title}</span>
+                  <h6 className="name">{post.userCreatedPost}</h6>
+                  <span className="title">{post.title}</span>
                   <span className="date">Date</span>
                 </div>
               </a>
               <button
                 onClick={() =>
-                  setShowEditPost((prev) => (prev === postID ? null : postID))
+                  setShowEditPost((prev) => (prev === post.postId ? null : post.postId))
                 }
               >
                 <img src="/Images/ellipsis.svg" alt="ellipsis" />
               </button>
-              {showEditPost === postID && (
+              {showEditPost ===  post.postId && (
                 <EditModel>
                   <li>
                     <img src="/Images/firebase.png" alt="saved" />
@@ -170,7 +176,7 @@ const Main = () => {
               )}
             </Actor>
             <Description>{post.description}</Description>
-            <SharedImg>
+            {/* <SharedImg>
               {post.sharedImage && <img src={post.sharedImage} alt="postIMG" />}
               {post.sharedVedio && (
                 <ReactPlayer
@@ -179,20 +185,20 @@ const Main = () => {
                   controls={true}
                 />
               )}
-            </SharedImg>
+            </SharedImg> */}
             <SocialContents>
               <li>
-                {post.likes.length > 0 && (
+                {post.likesQuantity > 0 && (
                   <img
                     src="https://static-exp1.licdn.com/sc/h/8ekq8gho1ruaf8i7f86vd1ftt"
                     alt="likes"
                   />
                 )}
-                <span>{post.likes.length}</span>
+                <span>{post.likesQuantity}</span>
               </li>
-              <li onClick={() => setShowComments((prev) => [...prev, id])}>
+              {/* <li onClick={() => setShowComments((prev) => [...prev, id])}>
                 <p>{post.comments ? post.comments.length : 0} comments </p>
-              </li>
+              </li> */}
             </SocialContents>
             <SocialActions>
               <button
@@ -212,10 +218,10 @@ const Main = () => {
 
                 <span>Like</span>
               </button>
-              <button onClick={() => setShowComments((prev) => [...prev, id])}>
+              {/* <button onClick={() => setShowComments((prev) => [...prev, id])}>
                 <img src="/Images/comment.svg" alt="comment" />
                 <span>Comment</span>
-              </button>
+              </button> */}
               <button>
                 <img src="/Images/share.svg" alt="share" />
                 <span>Share</span>
@@ -225,20 +231,20 @@ const Main = () => {
                 <span>Send</span>
               </button>
             </SocialActions>
-            {showComments.includes(id) && (
+            {/* {showComments.includes(id) && (
               <Comment
                 // photo={user?.photoURL}
                 // comments={post.comments}
                 // user={user}
                 postID={postID}
               />
-            )}
+            )} */}
           </Article>
         ))}
       {showModel && (
         <PostModel
           close={hideModel}
-          addPost={setPosts}
+          addPost={setPosts1}
           //   uploadPost={uploadPost}
         />
       )}
