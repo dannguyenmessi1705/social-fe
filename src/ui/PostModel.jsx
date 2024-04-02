@@ -1,9 +1,12 @@
 import { useState, useRef } from "react";
 import styled from "styled-components";
-import ReactPlayer from "react-player";
+import { SlPicture } from "react-icons/sl";
+import { IoCloseSharp } from "react-icons/io5";
+import useUser from "../features/authentication/useUser";
+import { API_URL } from "../utils/constants";
 
 const PostModel = (props) => {
-  //   const user = useSelector((state) => state.user.value);
+  const { user, isLoading } = useUser();
   const [text, setText] = useState("");
   const sharedImage = useRef();
   const [image, setImage] = useState();
@@ -51,20 +54,19 @@ const PostModel = (props) => {
       <Content>
         <Header>
           <h2>Create a post</h2>
-          <button
+          <IoCloseSharp
+            className="cursor-pointer rounded-full border p-1 text-3xl hover:bg-slate-400"
             onClick={() => {
               reset();
               props.close();
             }}
-          >
-            <img src="/Images/close.svg" alt="close" />
-          </button>
+          />
         </Header>
 
         <SharedContent>
           <UserInfo>
-            <img src="/Images/user.svg" alt="user" />
-            <span>Name</span>
+            <img src={`${API_URL}/images/${user?.avatar}`} alt="user" />
+            <span>{user?.fullName}</span>
           </UserInfo>
 
           <Description>
@@ -77,71 +79,32 @@ const PostModel = (props) => {
           </Description>
 
           <Uploads>
-            {(image || vedio) && (
-              <img
+            {image && (
+              <IoCloseSharp
+                className="cursor-pointer rounded-full border p-1 text-3xl hover:bg-slate-400"
                 onClick={() => {
                   setImage(null);
-                  setVedio(null);
                 }}
-                src="/Images/close-post.svg"
-                alt="close"
               />
-            )}
-            {image && !vedio && <img src={URL.createObjectURL(image)} alt="" />}
-            {vedio && !image && (
-              <ReactPlayer
-                width="100%"
-                url={URL.createObjectURL(vedio)}
-                controls={true}
-              />
-            )}
-            {!image && !vedio && textURL && (
-              <ReactPlayer width="100%" url={text} controls={true} />
             )}
           </Uploads>
 
           <Actions>
             <div className="editor">
-              <div className="addButtons">
-                <button
-                  disabled={image || vedio || textURL}
-                  onClick={() => sharedImage.current.click()}
-                >
-                  <img src="/Images/photo-icon.svg" alt="Add a pic" />
-                  <input
-                    ref={sharedImage}
-                    onChange={(e) => setImage(e.target.files[0])}
-                    type="file"
-                    accept="image/*"
-                    hidden
-                  />
-                </button>
-
-                <button
-                  disabled={image || vedio || textURL}
-                  onClick={() => sharedVedio.current.click()}
-                >
-                  <img src="/Images/vedio-icon.svg" alt="Add a vedio" />
-                  <input
-                    ref={sharedVedio}
-                    onChange={(e) => setVedio(e.target.files[0])}
-                    type="file"
-                    accept="video/*"
-                    hidden
-                  />
-                </button>
-
-                <button disabled={image || vedio || textURL}>
-                  <img src="/Images/document.svg" alt="Add a document" />
-                </button>
-              </div>
-
-              <div className="shareComment">
-                <button>
-                  <img src="/Images/comment.svg" alt="allow comments" />
-                  Anyone
-                </button>
-              </div>
+              <button
+                disabled={image || vedio || textURL}
+                onClick={() => sharedImage.current.click()}
+                className="rounded-full px-2 py-1 hover:bg-slate-400"
+              >
+                <SlPicture className="text-3xl" />
+                <input
+                  ref={sharedImage}
+                  onChange={(e) => setImage(e.target.files[0])}
+                  type="file"
+                  accept="image/*"
+                  hidden
+                />
+              </button>
             </div>
 
             <button

@@ -3,11 +3,14 @@ import styled from "styled-components";
 import PostModel from "./PostModel";
 import ReactPlayer from "react-player";
 import Comment from "./Comment";
+import useUser from "../features/authentication/useUser";
+
+import { API_URL } from "../utils/constants";
 
 /*________________________________________________________________________________*/
 
 const Main = () => {
-  //   const user = useSelector((state) => state.user.value);
+  const { user, isLoading } = useUser();
   const [posts, setPosts] = useState([]);
   const [showModel, setShowModel] = useState(false);
   const [showComments, setShowComments] = useState([]);
@@ -107,30 +110,8 @@ const Main = () => {
     <div>
       <ShareBox>
         <div>
-          <img src="avatar" alt="user" />
+          <img src={`${API_URL}/images/${user?.avatar}`} alt="user" />
           <button onClick={() => setShowModel(true)}>Start a post</button>
-        </div>
-
-        <div>
-          <button onClick={() => setShowModel(true)}>
-            <img src="/Images/photo-icon.svg" alt="pic" />
-            <span>Photo</span>
-          </button>
-
-          <button onClick={() => setShowModel(true)}>
-            <img src="/Images/vedio-icon.svg" alt="vedio" />
-            <span>Vedio</span>
-          </button>
-
-          <button onClick={() => setShowModel(true)}>
-            <img src="/Images/job-icon.svg" alt="job" />
-            <span>Job</span>
-          </button>
-
-          <button onClick={() => setShowModel(true)}>
-            <img src="/Images/article-icon.svg" alt="article" />
-            <span>Write article</span>
-          </button>
         </div>
       </ShareBox>
 
