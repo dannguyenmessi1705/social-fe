@@ -2,37 +2,38 @@ import { Outlet } from "react-router-dom";
 import styled from "styled-components";
 import Header from "./Header";
 
-const StyledAppLayout = styled.div`
-  display: grid;
-  grid-template-columns: 26rem 1fr;
-  grid-template-rows: auto 1fr;
-  height: 100dvh;
-`;
-
-const StyledMain = styled.main`
-  background-color: var(--color-grey-50);
-  padding: 4rem 4.8rem 6.4rem;
-  overflow: scroll;
-`;
-
 const Container = styled.div`
-  max-width: 120rem;
-  margin: 0 auto;
-  display: flex;
-  flex-direction: column;
-  gap: 3.2rem;
+  padding-top: 52px;
+  max-width: 100dvw;
+  background-color: #f5f5f5;
 `;
+
+
+const Layout = styled.div`
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  column-gap: 25px;
+  row-gap: 25px;
+  max-width: 80%;
+  margin: 20px auto;
+  @media (max-width: 768px) {
+    display: flex;
+    flex-direction: column;
+    padding: 0 5px;
+  }
+`;
+
 
 function AppLayout() {
   return (
-    <StyledAppLayout>
+    <>
       <Header />
-      <StyledMain>
-        <Container>
+      <Container>
+        <Layout>
           <Outlet />
-        </Container>
-      </StyledMain>
-    </StyledAppLayout>
+        </Layout>
+      </Container>
+    </>
   );
 }
 

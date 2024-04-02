@@ -31,3 +31,8 @@ export async function signup(formData) {
     throw new Error("Signup failed");
   }
 }
+
+export async function signout() {
+  localStorage.removeItem("user");
+  return true;
+}

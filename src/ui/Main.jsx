@@ -104,7 +104,7 @@ const Main = () => {
   //   };
 
   return (
-    <Container>
+    <div>
       <ShareBox>
         <div>
           <img src="avatar" alt="user" />
@@ -261,16 +261,11 @@ const Main = () => {
           //   uploadPost={uploadPost}
         />
       )}
-    </Container>
+    </div>
   );
 };
 export default Main;
 
-/*________________________________________________________________________________*/
-const Container = styled.div`
-  grid-area: main;
-`;
-/*_________________________________________*/
 const CommonCard = styled.article`
   overflow: hidden;
   text-align: center;

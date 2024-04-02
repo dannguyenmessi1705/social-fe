@@ -4,7 +4,7 @@ import styled from "styled-components";
 
 const RightSide = (props) => {
   return (
-    <Container>
+    <div>
       <FollowCard>
         <Title>
           <h2>Add to your feed</h2>
@@ -45,17 +45,10 @@ const RightSide = (props) => {
       <BannerCard>
         <img src="/Images/ads.png" alt="" />
       </BannerCard>
-    </Container>
+    </div>
   );
 };
 export default RightSide;
-
-/*________________________________________________________________________________*/
-
-const Container = styled.div`
-  grid-area: RightSide;
-`;
-/*_________________________________________*/
 const FollowCard = styled.div`
   text-align: center;
   overflow: hidden;

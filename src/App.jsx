@@ -4,8 +4,7 @@ import { Toaster } from "react-hot-toast";
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 
 import AppLayout from "./ui/AppLayout";
-import Home from "./ui/Home";
-import Post from "./page/Post";
+import Home from "./page/Home";
 import Chat from "./page/Chat";
 import User from "./page/User";
 import Signin from "./page/Signin";
@@ -37,8 +36,8 @@ function App() {
               </ProtectRoute>
             }
           >
-            <Route index element={<Navigate replace to="/" />} />
-            <Route path="/" element={<Home />} />
+            <Route index element={<Navigate replace to="/feed" />} />
+            <Route path="/feed" element={<Home />} />
             <Route path="/chat" element={<Chat />} />
             <Route path="/user" element={<User />} />
           </Route>

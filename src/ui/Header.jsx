@@ -1,77 +1,68 @@
 import { useState } from "react";
-// import { useSelector } from "react-redux";
-import { Navigate } from "react-router-dom";
+import useUser from "../features/authentication/useUser";
+import { Navigate, Link, NavLink } from "react-router-dom";
+import {
+  FaCaretDown,
+  FaSearch,
+  FaHome,
+  FaFacebookMessenger,
+  FaBell,
+  FaTh,
+} from "react-icons/fa";
 import styled from "styled-components";
+
+import { API_URL } from "../utils/constants";
 import Profile from "./Profile";
-
-/*________________________________________________________________________________*/
-
+import Search from "./Search";
 const Header = (props) => {
-  // const user = useSelector((state) => state.user.value);
+  const { user, isLoading } = useUser();
   const [showUser, setShowUser] = useState(false);
 
   return (
     <Container>
-      {/* {!user && <Navigate to="/" />} */}
+      {!user && <Navigate to="/signin" />}
       <Content>
         <Logo>
-          <a href="/feed">
-            <img src="/Images/home-logo.svg" alt="" />
-          </a>
+          <Link to="/feed">
+            <img src="/images/logo.svg" alt="" />
+          </Link>
         </Logo>
-        <Search>
-          <div>
-            <input type="text" placeholder="Search" />
-          </div>
-          <SearchIcon>
-            <img src="/Images/search-icon.svg" alt="" />
-          </SearchIcon>
-        </Search>
+        <Search />
         <Nav>
           <NavListWrap>
-            <NavList className="active">
-              <img src="/Images/nav-home.svg" alt="" />
-              <span>Home</span>
+            <NavList to="/feed">
+              <FaHome className="text-2xl" />
+              <span className="hover:text-slate-50">Home</span>
             </NavList>
 
-            <NavList>
-              <img src="/Images/nav-network.svg" alt="" />
-              <span>My Network</span>
-            </NavList>
-
-            <NavList>
-              <img src="/Images/nav-jobs.svg" alt="" />
-              <span>Jobs</span>
-            </NavList>
-
-            <NavList>
-              <img src="/Images/nav-messaging.svg" alt="" />
+            <NavList to="/chat">
+              <FaFacebookMessenger className="text-2xl" />
               <span>Messaging</span>
             </NavList>
 
-            <NavList>
-              <img src="/Images/nav-notifications.svg" alt="" />
+            <NavButton>
+              <FaBell className="text-2xl" />
               <span>Notifications</span>
-            </NavList>
+            </NavButton>
 
             <User onClick={() => setShowUser(!showUser)}>
-              {/* {user && user.photoURL ? (
-                <img src={user.photoURL} alt="user" />
+              {user && user.avatar ? (
+                <img src={`${API_URL}/images/${user.avatar}`} alt="user" />
               ) : (
                 <img src="/Images/user.svg" alt="user" />
-              )} */}
+              )}
               <span>
                 Me
-                <img src="/Images/down-icon.svg" alt="" />
+                <FaCaretDown />
               </span>
               {showUser && <Profile />}
             </User>
 
             <Work>
-              <img src="/Images/nav-work.svg" alt="" />
+              <FaTh className="text-2xl" />
               <span>
                 Work
-                <img src="/Images/down-icon.svg" alt="" />
+                <FaCaretDown />
               </span>
             </Work>
           </NavListWrap>
@@ -112,50 +103,7 @@ const Logo = styled.span`
     width: 10px;
   }
 `;
-/*___________________________________________________*/
-const Search = styled.div`
-  opacity: 1;
-  flex-grow: 1;
-  position: relative;
-  & > div {
-    max-width: 280px;
-    input {
-      border: none;
-      box-shadow: none;
-      background-color: #eef3f8;
-      border-radius: 2px;
-      color: rgba(0, 0, 0, 0.9);
-      width: 218px;
-      padding: 0 8px 0 40px;
-      line-height: 1.75;
-      font-weight: 400;
-      font-size: 14px;
-      height: 34px;
-      border-color: #dce6f1;
-      vertical-align: text-top;
-      @media (max-width: 767px) {
-        width: 205px;
-      }
-    }
-  }
-  @media (max-width: 365px) {
-    margin-left: 25px;
-  }
-`;
-/*___________________________________________________*/
-const SearchIcon = styled.div`
-  width: 40px;
-  position: absolute;
-  z-index: 1;
-  top: 10px;
-  left: 2px;
-  border-radius: 0 2px 2px 0;
-  margin: 0;
-  pointer-events: none;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-`;
+
 /*___________________________________________________*/
 const Nav = styled.nav`
   margin-left: auto;
@@ -194,7 +142,34 @@ const NavListWrap = styled.ul`
   }
 `;
 /*___________________________________________________*/
-const NavList = styled.li`
+const NavList = styled(NavLink)`
+  justify-content: center;
+  display: flex;
+  align-items: center;
+  background: transparent;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  font-size: 12px;
+  font-weight: 400;
+  justify-content: center;
+  line-height: 1.5;
+  min-height: 52px;
+  min-width: 80px;
+  position: relative;
+  text-decoration: none;
+  span {
+    color: rgba(0, 0, 0, 0.6);
+    display: flex;
+    align-items: center;
+  }
+  @media (max-width: 768px) {
+    min-width: 70px;
+    font-size: 10.5px;
+  }
+`;
+
+const NavButton = styled.li`
   justify-content: center;
   display: flex;
   align-items: center;
@@ -228,7 +203,7 @@ const NavList = styled.li`
   }
 `;
 
-const User = styled(NavList)`
+const User = styled(NavButton)`
   svg {
     width: 24px;
     border-radius: 50%;

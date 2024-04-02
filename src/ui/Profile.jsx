@@ -1,19 +1,19 @@
 import styled from "styled-components";
-// import { useDispatch, useSelector } from "react-redux";
-// import { signOut } from "../App/user-slice";
 import { useNavigate } from "react-router-dom";
+
+import useSignout from "../features/authentication/useSignout";
+import useUser from "../features/authentication/useUser";
+import { API_URL } from "../utils/constants";
 
 /*________________________________________________________________________________*/
 
 const Profile = () => {
+  const { user, isLoading } = useUser();
+  const { signout, isSigningOut } = useSignout();
   const navigate = useNavigate();
-//   const user = useSelector((state) => state.user.value);
-//   const dispatch = useDispatch();
-
-  const signOutHandler = async () => {
-    // await auth.signOut();
-    // dispatch(signOut());
-    navigate("/");
+  const signOutHandler = () => {
+    signout();
+    navigate("/signin");
   };
 
   return (
@@ -21,7 +21,7 @@ const Profile = () => {
       <div className="about">
         <img
           className="pic"
-          src="/Images/user.svg"
+          src={`${API_URL}/images/${user.avatar}`}
           style={{
             fontSize: "27px",
             width: "55px",
@@ -31,8 +31,8 @@ const Profile = () => {
           alt="user"
         />
         <div className="info">
-          {/* <h4>{user?.displayName}</h4>
-          <p>{user?.email}</p> */}
+          <h4>{user?.fullName}</h4>
+          <p>{user?.email}</p>
         </div>
       </div>
       <article onClick={signOutHandler}>

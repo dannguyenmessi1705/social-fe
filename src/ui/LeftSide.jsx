@@ -1,18 +1,23 @@
+import { Link } from "react-router-dom";
 import styled from "styled-components";
 
+import useUser from "../features/authentication/useUser";
+
+import { API_URL } from "../utils/constants";
+import Item from "./Item";
+
 const LeftSide = (props) => {
+  const { user, isLoading } = useUser();
+
   return (
-    <Container>
+    <div>
       <ArtCard>
         <UserInfo>
           <CardBackground />
-          <a href="/feed">
-            <Photo src="" />
-            <Link>Welcome,</Link>
-          </a>
-          <a href="/feed">
-            <AddPhotoText>Add a photo</AddPhotoText>
-          </a>
+          <Link className="text-lg font-semibold text-slate-800" to="/user">
+            <Photo src={`${API_URL}/images/${user.avatar}`} />
+            <span>Welcome, {user.fullName}</span>
+          </Link>
         </UserInfo>
         <Widget>
           <a href="/feed">
@@ -32,30 +37,26 @@ const LeftSide = (props) => {
       </ArtCard>
 
       <CommunityCard>
-        <a href="/feed">
+        <Link to="/feed">
           <span>Groups</span>
-        </a>
-        <a href="/feed">
+        </Link>
+        <Link to="/feed">
           <span>
             Events
             <img src="/Images/plus-icon.svg" alt="" />
           </span>
-        </a>
-        <a href="/feed">
+        </Link>
+        <Link to="/feed">
           <span>Follow Hashtags</span>
-        </a>
-        <a href="/feed">
+        </Link>
+        <Link to="/feed">
           <span>Discover more</span>
-        </a>
+        </Link>
       </CommunityCard>
-    </Container>
+    </div>
   );
 };
 export default LeftSide;
-
-const Container = styled.div`
-  grid-area: LeftSide;
-`;
 
 const ArtCard = styled.div`
   text-align: center;
@@ -70,14 +71,12 @@ const ArtCard = styled.div`
     0 0 0 1px rgb(0 0 0 / 15%),
     0 0 0 rgb(0 0 0 / 20%);
 `;
-
 const UserInfo = styled.div`
   border-bottom: 1px solid rgba(0, 0, 0, 0.15);
   padding: 12px 12px 16px;
   word-wrap: break-word;
   word-break: break-word;
 `;
-
 const CardBackground = styled.div`
   background: url("/Images/card-bg.svg");
   background-position: center;
@@ -85,7 +84,6 @@ const CardBackground = styled.div`
   height: 54px;
   margin: -12px -12px 0;
 `;
-
 const Photo = styled.img`
   box-shadow: none;
   width: 72px;
@@ -99,21 +97,6 @@ const Photo = styled.img`
   border: 2px solid white;
   margin: -38px auto 12px;
   border-radius: 50%;
-`;
-
-const Link = styled.div`
-  font-size: 16px;
-  line-height: 1.5;
-  color: rgba(0, 0, 0, 0.9);
-  font-weight: 600;
-`;
-
-const AddPhotoText = styled.div`
-  color: #0a66c2;
-  margin-top: 4px;
-  font-size: 12px;
-  line-height: 1.33;
-  font-weight: 400;
 `;
 
 const Widget = styled.div`
@@ -150,22 +133,6 @@ const Widget = styled.div`
     color: #0a66c2;
     font-size: 13px;
     font-weight: 600;
-  }
-`;
-
-const Item = styled.a`
-  border-color: rgba(0, 0, 0, 0.8);
-  text-align: left;
-  padding: 12px;
-  font-size: 12px;
-  display: block;
-  span {
-    display: flex;
-    align-items: center;
-    color: rgba(0, 0, 0, 1);
-  }
-  &:hover {
-    background-color: rgba(0, 0, 0, 0.08);
   }
 `;
 
