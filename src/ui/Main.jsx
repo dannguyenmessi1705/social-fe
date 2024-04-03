@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 import styled from "styled-components";
+import Actor from "../features/post/Actor";
 import PostModel from "./PostModel";
 import ReactPlayer from "react-player";
 import Comment from "./Comment";
@@ -14,7 +15,6 @@ import { API_URL } from "../utils/constants";
 const Main = () => {
   const { user, isLoading } = useUser();
   const { posts, isLoadingPosts } = useGetAllPost();
-  console.log(posts);
   const [posts1, setPosts1] = useState([]);
   const [showModel, setShowModel] = useState(false);
   const [showComments, setShowComments] = useState([]);
@@ -141,51 +141,12 @@ const Main = () => {
       {posts.length > 0 &&
         posts.map((post) => (
           <Article key={post.postId}>
-            <Actor>
-              <a href="/feed">
-                <img src="" alt="user" />
-                <div className="info">
-                  <h6 className="name">{post.userCreatedPost}</h6>
-                  <span className="title">{post.title}</span>
-                  <span className="date">Date</span>
-                </div>
-              </a>
-              <button
-                onClick={() =>
-                  setShowEditPost((prev) => (prev === post.postId ? null : post.postId))
-                }
-              >
-                <img src="/Images/ellipsis.svg" alt="ellipsis" />
-              </button>
-              {showEditPost ===  post.postId && (
-                <EditModel>
-                  <li>
-                    <img src="/Images/firebase.png" alt="saved" />
-                    <div className="info">
-                      <h6>Save</h6>
-                      <span>Save for later</span>
-                    </div>
-                  </li>
-                  {/* {post.user.title === user.email && (
-                    <li onClick={() => deletePost(postID)}>
-                      <img src="/Images/delete.svg" alt="" />
-                      <h6>Delete post</h6>
-                    </li>
-                  )} */}
-                </EditModel>
-              )}
-            </Actor>
-            <Description>{post.description}</Description>
-            {/* <SharedImg>
-              {post.sharedImage && <img src={post.sharedImage} alt="postIMG" />}
-              {post.sharedVedio && (
-                <ReactPlayer
-                  url={post.sharedVedio}
-                  width={"100%"}
-                  controls={true}
-                />
-              )}
-            </SharedImg> */}
+            <Actor
+              post={post}
+              setShowEditPost={setShowEditPost}
+              showEditPost={showEditPost}
+            />
+            <Description>{post?.title}</Description>
             <SocialContents>
               <li>
                 {post.likesQuantity > 0 && (
@@ -196,9 +157,9 @@ const Main = () => {
                 )}
                 <span>{post.likesQuantity}</span>
               </li>
-              {/* <li onClick={() => setShowComments((prev) => [...prev, id])}>
-                <p>{post.comments ? post.comments.length : 0} comments </p>
-              </li> */}
+              <li>
+                <p>{post?.commentsQuantity} comments </p>
+              </li>
             </SocialContents>
             <SocialActions>
               <button
@@ -367,96 +328,7 @@ const Article = styled(CommonCard)`
   margin: 0 0 8px;
   overflow: visible;
 `;
-/*_________________________________________*/
-const Actor = styled.div`
-  padding-right: 40px;
-  padding: 12px 16px 0;
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 8px;
-  align-items: flex-start;
-  position: relative;
-  a {
-    overflow: hidden;
-    display: flex;
-    img {
-      width: 48px;
-      height: 48px;
-      border-radius: 50%;
-      margin-right: 10px;
-    }
-    .info {
-      text-align: start;
-      h6 {
-        font-size: 14px;
-        color: rgba(0, 0, 0, 1);
-        font-weight: 600;
-      }
-      span {
-        font-size: 12px;
-        display: block;
-        color: rgba(0, 0, 0, 0.6);
-      }
-    }
-  }
 
-  button {
-    background-color: transparent;
-    border: none;
-    cursor: pointer;
-    padding: 5px;
-    border-radius: 50px;
-
-    &:hover {
-      background-color: rgba(0, 0, 0, 0.08);
-    }
-  }
-`;
-/*_________________________________________*/
-const EditModel = styled.ul`
-  animation: fadeIn 0.5s;
-  text-align: start;
-  position: absolute;
-  right: 5px;
-  top: 55px;
-  background-color: white;
-  box-shadow:
-    0 0 0 1px rgb(0 0 0 / 15%),
-    0 6px 9px rgb(0 0 0 / 20%);
-  border-radius: 8px;
-  overflow: hidden;
-  z-index: 99;
-  min-width: 250px;
-  li {
-    display: flex;
-    padding: 10px;
-    align-items: center;
-    gap: 8px;
-    cursor: pointer;
-    transition: 0.3s;
-    &:hover {
-      background-color: rgba(0, 0, 0, 0.08);
-    }
-    img {
-      width: 18px;
-      height: 20px;
-    }
-    h6 {
-      font-size: 14px;
-      color: rgba(0, 0, 0, 1);
-      font-weight: 600;
-    }
-    .info {
-      text-align: start;
-      span {
-        font-size: 12px;
-        display: block;
-        color: rgba(0, 0, 0, 0.6);
-      }
-    }
-  }
-`;
-/*_________________________________________*/
 const Description = styled.div`
   font-size: 14px;
   text-align: start;

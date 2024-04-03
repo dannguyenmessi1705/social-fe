@@ -26,3 +26,19 @@ export async function searchUsers(name) {
     throw new Error("Search failed");
   }
 }
+
+export async function getDetailUser(userId) {
+  try {
+    const token = JSON.parse(localStorage.getItem("user")).accessToken;
+    const data = await axios.get(`${API_URL}/user/${userId}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    if (!data) throw new Error("User not found");
+    const result = await data.data;
+    return result;
+  } catch (error) {
+    throw new Error("User not found");
+  }
+}
