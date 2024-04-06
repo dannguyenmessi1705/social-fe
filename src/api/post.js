@@ -20,7 +20,7 @@ export async function searchPosts(name) {
 export async function getPosts() {
   try {
     const token = JSON.parse(localStorage.getItem("user")).accessToken;
-    const data = await axios.get(`${API_URL}/post/get`, {
+    const data = await axios.get(`${API_URL}/post/get/all`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },

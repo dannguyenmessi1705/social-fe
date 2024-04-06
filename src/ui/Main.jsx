@@ -1,4 +1,8 @@
 import { useCallback, useEffect, useState } from "react";
+import { AiFillLike, AiOutlineLike } from "react-icons/ai";
+import { FaRegComment } from "react-icons/fa";
+import { FaRetweet } from "react-icons/fa6";
+
 import styled from "styled-components";
 import Actor from "../features/post/Actor";
 import PostModel from "./PostModel";
@@ -170,26 +174,22 @@ const Main = () => {
               //   fetchLikes(postID, post.likes);
               // }}
               >
-                <img className="unLiked" src="/Images/like.svg" alt="like" />
-                <img
-                  className="liked"
-                  src="https://static-exp1.licdn.com/sc/h/5zhd32fqi5pxwzsz78iui643e"
-                  alt="like"
-                />
+                <AiOutlineLike />
+                <AiFillLike className="text-blue-600" />
 
-                <span>Like</span>
+                <span className="text-blue-600">Like</span>
               </button>
-              {/* <button onClick={() => setShowComments((prev) => [...prev, id])}>
-                <img src="/Images/comment.svg" alt="comment" />
+
+              <button
+              //onClick={() => setShowComments((prev) => [...prev, id])}
+              >
+                <FaRegComment />
                 <span>Comment</span>
-              </button> */}
-              <button>
-                <img src="/Images/share.svg" alt="share" />
-                <span>Share</span>
               </button>
+
               <button>
-                <img src="/Images/send.svg" alt="send" />
-                <span>Send</span>
+                <FaRetweet />
+                <span>Re Post</span>
               </button>
             </SocialActions>
             {/* {showComments.includes(id) && (
