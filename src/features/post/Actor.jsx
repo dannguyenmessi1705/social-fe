@@ -1,4 +1,7 @@
 import styled from "styled-components";
+import { Link } from "react-router-dom";
+import { useState } from "react";
+
 import useUserDetail from "../user/useUserDetail";
 
 import { SlOptionsVertical } from "react-icons/sl";
@@ -6,6 +9,7 @@ import { FaEdit, FaTrash } from "react-icons/fa";
 import { PiWarningFill } from "react-icons/pi";
 import { API_URL } from "../../utils/constants";
 import useDeletePost from "./useDeletePost";
+import PostUpdate from "./PostUpdate";
 
 const StlyedActor = styled.div`
   padding-right: 40px;
@@ -91,55 +95,65 @@ const EditModel = styled.ul`
 function Actor({ post, setShowEditPost, showEditPost, user }) {
   const { userDetail } = useUserDetail(post.userCreatedPost);
   const { deletePost } = useDeletePost();
+  const [showModal, setShowModal] = useState(false);
   return (
-    <StlyedActor>
-      <a href="/feed">
-        <img
-          src={
-            `${API_URL}/images/${userDetail?.avtUrl}` ?? `/images/anonymous.png`
+    <>
+      <StlyedActor>
+        <Link to={`/user/${userDetail?.userId}`}>
+          <img
+            src={
+              `${API_URL}/images/${userDetail?.avtUrl}` ??
+              `/images/anonymous.png`
+            }
+            alt="user"
+          />
+          <div className="info">
+            <h6 className="name">{userDetail?.fullName}</h6>
+            <span className="title">{userDetail?.email}</span>
+            <span className="date">{post.postedAt}</span>
+          </div>
+        </Link>
+        <button
+          onClick={() =>
+            setShowEditPost((prev) =>
+              prev === post.postId ? null : post.postId,
+            )
           }
-          alt="user"
-        />
-        <div className="info">
-          <h6 className="name">{userDetail?.fullName}</h6>
-          <span className="title">{userDetail?.email}</span>
-          <span className="date">{post.postedAt}</span>
-        </div>
-      </a>
-      <button
-        onClick={() =>
-          setShowEditPost((prev) => (prev === post.postId ? null : post.postId))
-        }
-      >
-        <SlOptionsVertical />
-      </button>
-      {showEditPost === post.postId && (
-        <EditModel>
-          {userDetail?.userId !== user.userId && (
-            <li>
-              <PiWarningFill />
-              <div>
-                <h6>Report user</h6>
-              </div>
-            </li>
-          )}
-          {post.userCreatedPost === user.userId && (
-            <>
-              <li
-              //onClick={() => deletePost(postID)}
-              >
-                <FaEdit />
-                <h6>Edit post</h6>
+        >
+          <SlOptionsVertical />
+        </button>
+        {showEditPost === post.postId && (
+          <EditModel>
+            {userDetail?.userId !== user.userId && (
+              <li>
+                <PiWarningFill />
+                <div>
+                  <h6>Report user</h6>
+                </div>
               </li>
-              <li onClick={() => deletePost(post.postId)}>
-                <FaTrash />
-                <h6>Delete post</h6>
-              </li>
-            </>
-          )}
-        </EditModel>
-      )}
-    </StlyedActor>
+            )}
+            {post.userCreatedPost === user.userId && (
+              <>
+                <li
+                  onClick={() => {
+                    setShowModal((show) => !show);
+                    setShowEditPost(null);
+                  }}
+                >
+                  <FaEdit />
+                  <h6>Edit post</h6>
+                </li>
+                <li onClick={() => deletePost(post.postId)}>
+                  <FaTrash />
+                  <h6>Delete post</h6>
+                </li>
+              </>
+            )}
+          </EditModel>
+        )}
+      </StlyedActor>
+      {showModal && <PostUpdate close={setShowModal} post={post} user={user} />}
+    </>
   );
 }
 

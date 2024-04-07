@@ -62,3 +62,33 @@ export async function deletePost(postId) {
     throw new Error("Delete post failed");
   }
 }
+
+export async function getDetailPost(postId) {
+  const token = JSON.parse(localStorage.getItem("user")).accessToken;
+  try {
+    const data = await axios.get(`${API_URL}/post/${postId}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    const result = await data.data;
+    return result;
+  } catch (error) {
+    throw new Error("Post not found");
+  }
+}
+
+export async function updatePost(post, postId) {
+  const token = JSON.parse(localStorage.getItem("user")).accessToken;
+  try {
+    const data = await axios.patch(`${API_URL}/post/update/${postId}`, post, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    const result = await data.data;
+    return result;
+  } catch (error) {
+    throw new Error("Update post failed");
+  }
+}

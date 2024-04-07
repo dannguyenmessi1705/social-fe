@@ -1,122 +1,126 @@
 import { useState, useRef } from "react";
 import styled from "styled-components";
 
-import useUploadPost from "./useUploadPost";
-
 import { SlPicture } from "react-icons/sl";
 import { IoCloseSharp } from "react-icons/io5";
-
 import { API_URL } from "../../utils/constants";
 import Spinner from "../../ui/Spinner";
+import usePostUpdate from "./usePostUpdate";
 
-const PostModel = ({ close, user }) => {
-  const { uploadPost, isUploadingPost } = useUploadPost();
-  const [title, setTitle] = useState("");
-  const [body, setBody] = useState("");
+const PostUpdate = ({ close, user, post }) => {
+  const { updatePost, isUpdatingPost } = usePostUpdate();
+  const [title, setTitle] = useState(post?.title);
+  const [body, setBody] = useState(post?.body);
   const sharedImage = useRef();
-  const [image, setImage] = useState();
+  const [image, setImage] = useState(post?.postImg);
 
   const reset = () => {
     setTitle("");
     setBody("");
-    setImage();
+    setImage(null);
   };
 
-  const postArticleHandler = () => {
+  const postUpdate = () => {
+    const postId = post.postId;
     let formData = new FormData();
     formData.append("title", title);
     formData.append("body", body);
-    if (image) formData.append("postImg", image);
-    uploadPost(formData);
+    if (image instanceof File) formData.append("postImg", image);
+    else if (image == null) formData.append("postImg", null);
+    updatePost({ post: formData, postId });
     reset();
     close();
   };
 
-  if (isUploadingPost) return <Spinner />;
-
   return (
     <Container>
-      <Content>
-        <Header>
-          <h2>Create a post</h2>
-          <IoCloseSharp
-            className="cursor-pointer rounded-full border p-1 text-3xl hover:bg-slate-400"
-            onClick={() => {
-              reset();
-              close();
-            }}
-          />
-        </Header>
+      {isUpdatingPost ? (
+        <Spinner />
+      ) : (
+        <Content>
+          <Header>
+            <h2>Create a post</h2>
+            <IoCloseSharp
+              className="cursor-pointer rounded-full border p-1 text-3xl hover:bg-slate-400"
+              onClick={() => {
+                reset();
+                close(false);
+              }}
+            />
+          </Header>
 
-        <SharedContent>
-          <UserInfo>
-            <img src={`${API_URL}/images/${user?.avatar}`} alt="user" />
-            <span>{user?.fullName}</span>
-          </UserInfo>
+          <SharedContent>
+            <UserInfo>
+              <img src={`${API_URL}/images/${user?.avatar}`} alt="user" />
+              <span>{user?.fullName}</span>
+            </UserInfo>
 
-          <Description>
-            <input
-              value={title}
-              onChange={(e) => setTitle(e.currentTarget.value)}
-              autoFocus={true}
-              placeholder="Title post"
-            ></input>
-          </Description>
+            <Description>
+              <input
+                value={title}
+                onChange={(e) => setTitle(e.currentTarget.value)}
+                placeholder="Title post"
+              ></input>
+            </Description>
 
-          <Description>
-            <textarea
-              value={body}
-              onChange={(e) => setBody(e.currentTarget.value)}
-              autoFocus={true}
-              placeholder="What do you want to talk about?"
-            ></textarea>
-          </Description>
+            <Description>
+              <textarea
+                value={body}
+                onChange={(e) => setBody(e.currentTarget.value)}
+                placeholder="What do you want to talk about?"
+              ></textarea>
+            </Description>
 
-          <Uploads>
-            {image && (
-              <IoCloseSharp
-                className="absolute right-6 top-4 z-50 cursor-pointer rounded-full border border-stone-700 text-4xl transition-all duration-200 hover:bg-slate-400"
-                onClick={() => {
-                  setImage(null);
-                }}
-              />
-            )}
-            {image && <img src={URL.createObjectURL(image)} alt="" />}
-          </Uploads>
-
-          <Actions>
-            <div className="editor">
-              <button
-                disabled={image}
-                onClick={() => sharedImage.current.click()}
-                className="rounded-full px-2 py-1 hover:bg-slate-400"
-              >
-                <SlPicture className="text-3xl" />
-                <input
-                  ref={sharedImage}
-                  onChange={(e) => setImage(e.target.files[0])}
-                  type="file"
-                  accept="image/*"
-                  name="postImg"
-                  hidden
+            <Uploads>
+              {image && (
+                <IoCloseSharp
+                  className="absolute right-6 top-4 z-50 cursor-pointer rounded-full border border-stone-700 text-4xl transition-all duration-200 hover:bg-slate-400"
+                  onClick={() => {
+                    setImage(null);
+                  }}
                 />
-              </button>
-            </div>
+              )}
+              {image && image instanceof File ? (
+                <img src={URL.createObjectURL(image)} alt="" />
+              ) : (
+                <img src={`${API_URL}/images/${image}`} alt="" />
+              )}
+            </Uploads>
 
-            <button
-              disabled={!body.trim() || !title.trim() || isUploadingPost}
-              className="post"
-              onClick={postArticleHandler}
-            >
-              Post
-            </button>
-          </Actions>
-        </SharedContent>
-      </Content>
+            <Actions>
+              <div className="editor">
+                <button
+                  disabled={image}
+                  onClick={() => sharedImage.current.click()}
+                  className="rounded-full px-2 py-1 hover:bg-slate-400"
+                >
+                  <SlPicture className="text-3xl" />
+                  <input
+                    ref={sharedImage}
+                    onChange={(e) => setImage(e.target.files[0])}
+                    type="file"
+                    accept="image/*"
+                    name="postImg"
+                    hidden
+                  />
+                </button>
+              </div>
+
+              <button
+                disabled={!body.trim() || !title.trim() || isUpdatingPost}
+                className="post"
+                onClick={postUpdate}
+              >
+                Update
+              </button>
+            </Actions>
+          </SharedContent>
+        </Content>
+      )}
     </Container>
   );
 };
-export default PostModel;
+export default PostUpdate;
 
 const Container = styled.section`
   position: fixed;

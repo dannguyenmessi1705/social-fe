@@ -183,7 +183,7 @@ const Main = ({ user }) => {
           </Article>
         ))}
       {showModel && (
-        <PostModel close={hideModel} addPost={setPosts1} user={user} />
+        <PostModel close={hideModel} user={user} />
       )}
     </div>
   );
