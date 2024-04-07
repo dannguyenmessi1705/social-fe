@@ -11,17 +11,20 @@ import useGetAllPost from "../features/post/useGetAllPost";
 
 import { API_URL } from "../utils/constants";
 import useLikePost from "../features/post/useLikePost";
+import useUploadPost from "../features/post/useUploadPost";
+import usePostUpdate from "../features/post/usePostUpdate";
 
 /*________________________________________________________________________________*/
 
 const Main = ({ user }) => {
   const { posts, isLoadingPosts } = useGetAllPost();
   const { likePost, isLikingPost, unlikePost, isUnlikingPost } = useLikePost();
+  const { uploadPost, isUploadingPost } = useUploadPost();
+  const { updatePost, isUpdatingPost } = usePostUpdate();
   const [posts1, setPosts1] = useState([]);
   const [showModel, setShowModel] = useState(false);
   const [showComments, setShowComments] = useState([]);
   const [showEditPost, setShowEditPost] = useState(false);
-  const [load, setLoad] = useState("");
 
   if (isLoadingPosts) return <Spinner />;
 
@@ -38,20 +41,21 @@ const Main = ({ user }) => {
         </div>
       </ShareBox>
 
-      {load && (
+      {(isUploadingPost || isUpdatingPost) && (
         <UploadingBox>
-          <img src="/Images/vedio.svg" alt="vedio" />
           <div className="info">
             <span>Uploading...</span>
             <div className="progress">
               <span>0</span>
               <div className="bar">
-                <span style={{ width: load + "%" }} width={"50%"}></span>
+                <span
+                  style={{ width: isLoadingPosts + "%" }}
+                  width={"50%"}
+                ></span>
               </div>
               <span>100</span>
             </div>
           </div>
-          <img src="/Images/ellipsis.svg" alt="ellipsis" />
         </UploadingBox>
       )}
 
@@ -63,6 +67,7 @@ const Main = ({ user }) => {
               setShowEditPost={setShowEditPost}
               showEditPost={showEditPost}
               user={user}
+              updatePost={updatePost}
             />
             <Description>{post?.title}</Description>
             <SocialContents>
@@ -118,7 +123,9 @@ const Main = ({ user }) => {
             )} */}
           </Article>
         ))}
-      {showModel && <PostModel close={hideModel} user={user} />}
+      {showModel && (
+        <PostModel close={hideModel} user={user} uploadPost={uploadPost} />
+      )}
     </div>
   );
 };

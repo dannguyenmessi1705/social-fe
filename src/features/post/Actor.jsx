@@ -92,7 +92,7 @@ const EditModel = styled.ul`
   }
 `;
 
-function Actor({ post, setShowEditPost, showEditPost, user }) {
+function Actor({ post, setShowEditPost, showEditPost, user, updatePost }) {
   const { userDetail } = useUserDetail(post.userCreatedPost);
   const { deletePost } = useDeletePost();
   const [showModal, setShowModal] = useState(false);
@@ -152,7 +152,7 @@ function Actor({ post, setShowEditPost, showEditPost, user }) {
           </EditModel>
         )}
       </StlyedActor>
-      {showModal && <PostUpdate close={setShowModal} post={post} user={user} />}
+      {showModal && <PostUpdate close={setShowModal} post={post} user={user} updatePost={updatePost}/>}
     </>
   );
 }

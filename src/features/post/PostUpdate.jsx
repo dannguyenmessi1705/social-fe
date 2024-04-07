@@ -5,10 +5,8 @@ import { SlPicture } from "react-icons/sl";
 import { IoCloseSharp } from "react-icons/io5";
 import { API_URL } from "../../utils/constants";
 import Spinner from "../../ui/Spinner";
-import usePostUpdate from "./usePostUpdate";
 
-const PostUpdate = ({ close, user, post }) => {
-  const { updatePost, isUpdatingPost } = usePostUpdate();
+const PostUpdate = ({ close, user, post, updatePost }) => {
   const [title, setTitle] = useState(post?.title);
   const [body, setBody] = useState(post?.body);
   const sharedImage = useRef();
@@ -34,89 +32,85 @@ const PostUpdate = ({ close, user, post }) => {
 
   return (
     <Container>
-      {isUpdatingPost ? (
-        <Spinner />
-      ) : (
-        <Content>
-          <Header>
-            <h2>Create a post</h2>
-            <IoCloseSharp
-              className="cursor-pointer rounded-full border p-1 text-3xl hover:bg-slate-400"
-              onClick={() => {
-                reset();
-                close(false);
-              }}
-            />
-          </Header>
+      <Content>
+        <Header>
+          <h2>Create a post</h2>
+          <IoCloseSharp
+            className="cursor-pointer rounded-full border p-1 text-3xl hover:bg-slate-400"
+            onClick={() => {
+              reset();
+              close(false);
+            }}
+          />
+        </Header>
 
-          <SharedContent>
-            <UserInfo>
-              <img src={`${API_URL}/images/${user?.avatar}`} alt="user" />
-              <span>{user?.fullName}</span>
-            </UserInfo>
+        <SharedContent>
+          <UserInfo>
+            <img src={`${API_URL}/images/${user?.avatar}`} alt="user" />
+            <span>{user?.fullName}</span>
+          </UserInfo>
 
-            <Description>
-              <input
-                value={title}
-                onChange={(e) => setTitle(e.currentTarget.value)}
-                placeholder="Title post"
-              ></input>
-            </Description>
+          <Description>
+            <input
+              value={title}
+              onChange={(e) => setTitle(e.currentTarget.value)}
+              placeholder="Title post"
+            ></input>
+          </Description>
 
-            <Description>
-              <textarea
-                value={body}
-                onChange={(e) => setBody(e.currentTarget.value)}
-                placeholder="What do you want to talk about?"
-              ></textarea>
-            </Description>
+          <Description>
+            <textarea
+              value={body}
+              onChange={(e) => setBody(e.currentTarget.value)}
+              placeholder="What do you want to talk about?"
+            ></textarea>
+          </Description>
 
-            <Uploads>
-              {image && (
-                <IoCloseSharp
-                  className="absolute right-6 top-4 z-50 cursor-pointer rounded-full border border-stone-700 text-4xl transition-all duration-200 hover:bg-slate-400"
-                  onClick={() => {
-                    setImage(null);
-                  }}
-                />
-              )}
-              {image && image instanceof File ? (
-                <img src={URL.createObjectURL(image)} alt="" />
-              ) : (
-                <img src={`${API_URL}/images/${image}`} alt="" />
-              )}
-            </Uploads>
+          <Uploads>
+            {image && (
+              <IoCloseSharp
+                className="absolute right-6 top-4 z-50 cursor-pointer rounded-full border border-stone-700 text-4xl transition-all duration-200 hover:bg-slate-400"
+                onClick={() => {
+                  setImage(null);
+                }}
+              />
+            )}
+            {image && image instanceof File ? (
+              <img src={URL.createObjectURL(image)} alt="" />
+            ) : (
+              <img src={`${API_URL}/images/${image}`} alt="" />
+            )}
+          </Uploads>
 
-            <Actions>
-              <div className="editor">
-                <button
-                  disabled={image}
-                  onClick={() => sharedImage.current.click()}
-                  className="rounded-full px-2 py-1 hover:bg-slate-400"
-                >
-                  <SlPicture className="text-3xl" />
-                  <input
-                    ref={sharedImage}
-                    onChange={(e) => setImage(e.target.files[0])}
-                    type="file"
-                    accept="image/*"
-                    name="postImg"
-                    hidden
-                  />
-                </button>
-              </div>
-
+          <Actions>
+            <div className="editor">
               <button
-                disabled={!body.trim() || !title.trim() || isUpdatingPost}
-                className="post"
-                onClick={postUpdate}
+                disabled={image}
+                onClick={() => sharedImage.current.click()}
+                className="rounded-full px-2 py-1 hover:bg-slate-400"
               >
-                Update
+                <SlPicture className="text-3xl" />
+                <input
+                  ref={sharedImage}
+                  onChange={(e) => setImage(e.target.files[0])}
+                  type="file"
+                  accept="image/*"
+                  name="postImg"
+                  hidden
+                />
               </button>
-            </Actions>
-          </SharedContent>
-        </Content>
-      )}
+            </div>
+
+            <button
+              disabled={!body.trim() || !title.trim()}
+              className="post"
+              onClick={postUpdate}
+            >
+              Update
+            </button>
+          </Actions>
+        </SharedContent>
+      </Content>
     </Container>
   );
 };

@@ -1,16 +1,12 @@
 import { useState, useRef } from "react";
 import styled from "styled-components";
 
-import useUploadPost from "./useUploadPost";
-
 import { SlPicture } from "react-icons/sl";
 import { IoCloseSharp } from "react-icons/io5";
 
 import { API_URL } from "../../utils/constants";
-import Spinner from "../../ui/Spinner";
 
-const PostModel = ({ close, user }) => {
-  const { uploadPost, isUploadingPost } = useUploadPost();
+const PostModel = ({ close, user, uploadPost }) => {
   const [title, setTitle] = useState("");
   const [body, setBody] = useState("");
   const sharedImage = useRef();
@@ -31,8 +27,6 @@ const PostModel = ({ close, user }) => {
     reset();
     close();
   };
-
-  if (isUploadingPost) return <Spinner />;
 
   return (
     <Container>
@@ -104,7 +98,7 @@ const PostModel = ({ close, user }) => {
             </div>
 
             <button
-              disabled={!body.trim() || !title.trim() || isUploadingPost}
+              disabled={!body.trim() || !title.trim()}
               className="post"
               onClick={postArticleHandler}
             >
