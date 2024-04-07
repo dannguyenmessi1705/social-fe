@@ -8,7 +8,6 @@ import useUserDetail from "../features/user/useUserDetail";
 
 const LeftSide = ({ user }) => {
   const { userDetail } = useUserDetail(user.userId);
-  console.log(userDetail);
 
   return (
     <div>
@@ -34,13 +33,11 @@ const LeftSide = ({ user }) => {
             <p>{userDetail?.followings}</p>
           </Link>
         </Widget>
-        <Item>
-          <Link to="/profiles">
-            <span>
-              <CgProfile className="mr-1" />
-              My Profiles
-            </span>
-          </Link>
+        <Item to="/profiles">
+          <span>
+            <CgProfile className="mr-1" />
+            My Profiles
+          </span>
         </Item>
       </ArtCard>
 

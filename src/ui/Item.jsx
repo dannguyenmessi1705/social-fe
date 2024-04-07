@@ -1,6 +1,7 @@
+import { Link } from "react-router-dom";
 import styled from "styled-components";
 
-const StyledItem = styled.a`
+const StyledItem = styled(Link)`
   border-color: rgba(0, 0, 0, 0.8);
   text-align: left;
   padding: 12px;
