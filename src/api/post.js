@@ -32,3 +32,18 @@ export async function getPosts() {
     throw new Error("Posts not found");
   }
 }
+
+export async function createPost(post) {
+  try {
+    const token = JSON.parse(localStorage.getItem("user")).accessToken;
+    const data = await axios.post(`${API_URL}/post/new`, post, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    const result = await data.data;
+    return result;
+  } catch (error) {
+    throw new Error("Create post failed");
+  }
+}

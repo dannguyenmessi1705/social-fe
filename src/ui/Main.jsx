@@ -1,12 +1,10 @@
 import { useCallback, useEffect, useState } from "react";
 import { AiFillLike, AiOutlineLike } from "react-icons/ai";
 import { FaRegComment } from "react-icons/fa";
-import { FaRetweet } from "react-icons/fa6";
 
 import styled from "styled-components";
 import Actor from "../features/post/Actor";
-import PostModel from "./PostModel";
-import ReactPlayer from "react-player";
+import PostModel from "../features/post/PostModel";
 import Comment from "./Comment";
 import Spinner from "./Spinner";
 import useUser from "../features/authentication/useUser";
@@ -185,11 +183,6 @@ const Main = () => {
               >
                 <FaRegComment />
                 <span>Comment</span>
-              </button>
-
-              <button>
-                <FaRetweet />
-                <span>Re Post</span>
               </button>
             </SocialActions>
             {/* {showComments.includes(id) && (
@@ -379,8 +372,8 @@ const SocialContents = styled.ul`
 /*_________________________________________*/
 const SocialActions = styled.div`
   padding: 0 16px;
-  display: flex;
-  justify-content: space-between;
+  display: grid;
+  grid-template-columns: auto auto;
   min-height: 40px;
   overflow: hidden;
   button {
@@ -390,6 +383,7 @@ const SocialActions = styled.div`
     background-color: transparent;
     display: flex;
     align-items: center;
+    justify-content: center;
     cursor: pointer;
     gap: 5px;
     border: 0;

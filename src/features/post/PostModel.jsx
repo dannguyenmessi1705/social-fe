@@ -1,122 +1,122 @@
 import { useState, useRef } from "react";
 import styled from "styled-components";
+
+import useUploadPost from "./useUploadPost";
+
 import { SlPicture } from "react-icons/sl";
 import { IoCloseSharp } from "react-icons/io5";
-import useUser from "../features/authentication/useUser";
-import { API_URL } from "../utils/constants";
+import useUser from "../authentication/useUser";
+import { API_URL } from "../../utils/constants";
+import Spinner from "../../ui/Spinner";
 
-const PostModel = (props) => {
+const PostModel = ({ close, addPost }) => {
+  const { uploadPost, isUploadingPost } = useUploadPost();
   const { user, isLoading } = useUser();
-  const [text, setText] = useState("");
+  const [title, setTitle] = useState("");
+  const [body, setBody] = useState("");
   const sharedImage = useRef();
   const [image, setImage] = useState();
-  const sharedVedio = useRef();
-  const [vedio, setVedio] = useState();
-
-  let textURL = text.match(
-    new RegExp(
-      "([a-zA-Z0-9]+://)?([a-zA-Z0-9_]+:[a-zA-Z0-9_]+@)?([a-zA-Z0-9.-]+\\.[A-Za-z]{2,4})(:[0-9]+)?(/.*)?",
-    ),
-  );
 
   const reset = () => {
-    setText("");
+    setTitle("");
+    setBody("");
     setImage();
-    setVedio();
   };
 
-  //   const postArticleHandler = (e) => {
-  //     if (e.target === e.currentTarget) {
-  //       if (image || vedio) {
-  //         props.uploadPost({ image, vedio, text });
-  //       } else {
-  //         addDoc(collection(db, "Articles"), {
-  //           user: {
-  //             name: user.displayName,
-  //             title: user.email,
-  //             photo: user.photoURL,
-  //           },
-  //         //   date: Timestamp.now(),
-  //           sharedImage: "",
-  //           sharedVedio: textURL ? text : "",
-  //           description: text,
-  //           comments: [],
-  //           likes: [],
-  //         });
-  //       }
-  //       reset();
-  //       props.close();
-  //     }
-  //   };
+  const postArticleHandler = () => {
+    let formData = new FormData();
+    formData.append("title", title);
+    formData.append("body", body);
+    if (image) formData.append("postImg", image);
+    uploadPost(formData);
+    reset();
+    close();
+  };
+
+  if (isUploadingPost) return <Spinner />;
 
   return (
     <Container>
-      <Content>
-        <Header>
-          <h2>Create a post</h2>
-          <IoCloseSharp
-            className="cursor-pointer rounded-full border p-1 text-3xl hover:bg-slate-400"
-            onClick={() => {
-              reset();
-              props.close();
-            }}
-          />
-        </Header>
+      {isLoading ? (
+        <Spinner />
+      ) : (
+        <Content>
+          <Header>
+            <h2>Create a post</h2>
+            <IoCloseSharp
+              className="cursor-pointer rounded-full border p-1 text-3xl hover:bg-slate-400"
+              onClick={() => {
+                reset();
+                close();
+              }}
+            />
+          </Header>
 
-        <SharedContent>
-          <UserInfo>
-            <img src={`${API_URL}/images/${user?.avatar}`} alt="user" />
-            <span>{user?.fullName}</span>
-          </UserInfo>
+          <SharedContent>
+            <UserInfo>
+              <img src={`${API_URL}/images/${user?.avatar}`} alt="user" />
+              <span>{user?.fullName}</span>
+            </UserInfo>
 
-          <Description>
-            <textarea
-              value={text}
-              onChange={(e) => setText(e.currentTarget.value)}
-              autoFocus={true}
-              placeholder="What do you want to talk about?"
-            ></textarea>
-          </Description>
+            <Description>
+              <input
+                value={title}
+                onChange={(e) => setTitle(e.currentTarget.value)}
+                autoFocus={true}
+                placeholder="Title post"
+              ></input>
+            </Description>
 
-          <Uploads>
-            {image && (
-              <IoCloseSharp
-                className="cursor-pointer rounded-full border p-1 text-3xl hover:bg-slate-400"
-                onClick={() => {
-                  setImage(null);
-                }}
-              />
-            )}
-          </Uploads>
+            <Description>
+              <textarea
+                value={body}
+                onChange={(e) => setBody(e.currentTarget.value)}
+                autoFocus={true}
+                placeholder="What do you want to talk about?"
+              ></textarea>
+            </Description>
 
-          <Actions>
-            <div className="editor">
-              <button
-                disabled={image || vedio || textURL}
-                onClick={() => sharedImage.current.click()}
-                className="rounded-full px-2 py-1 hover:bg-slate-400"
-              >
-                <SlPicture className="text-3xl" />
-                <input
-                  ref={sharedImage}
-                  onChange={(e) => setImage(e.target.files[0])}
-                  type="file"
-                  accept="image/*"
-                  hidden
+            <Uploads>
+              {image && (
+                <IoCloseSharp
+                  className="cursor-pointer rounded-full border p-1 text-3xl hover:bg-slate-400"
+                  onClick={() => {
+                    setImage(null);
+                  }}
                 />
-              </button>
-            </div>
+              )}
+            </Uploads>
 
-            <button
-              disabled={text.trim() === ""}
-              className="post"
-              onClick={(e) => console.log("Post handle")}
-            >
-              Post
-            </button>
-          </Actions>
-        </SharedContent>
-      </Content>
+            <Actions>
+              <div className="editor">
+                <button
+                  disabled={image}
+                  onClick={() => sharedImage.current.click()}
+                  className="rounded-full px-2 py-1 hover:bg-slate-400"
+                >
+                  <SlPicture className="text-3xl" />
+                  <input
+                    ref={sharedImage}
+                    onChange={(e) => setImage(e.target.files[0])}
+                    type="file"
+                    accept="image/*"
+                    name="postImg"
+                    hidden
+                  />
+                </button>
+              </div>
+
+              <button
+                disabled={!body.trim() || !title.trim() || isUploadingPost}
+                className="post"
+                onClick={postArticleHandler}
+              >
+                Post
+              </button>
+            </Actions>
+          </SharedContent>
+        </Content>
+      )}
     </Container>
   );
 };
@@ -195,6 +195,16 @@ const Description = styled.div`
   textarea {
     width: 100%;
     min-height: 100px;
+    resize: none;
+    border: 0;
+    outline: 0;
+    font-size: 16px;
+    margin-bottom: 20px;
+    line-height: 1.5;
+  }
+  input {
+    width: 100%;
+    min-height: 20px;
     resize: none;
     border: 0;
     outline: 0;
