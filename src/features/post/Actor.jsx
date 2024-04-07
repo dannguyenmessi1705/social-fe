@@ -5,7 +5,6 @@ import { SlOptionsVertical } from "react-icons/sl";
 import { FaEdit, FaTrash } from "react-icons/fa";
 import { PiWarningFill } from "react-icons/pi";
 import { API_URL } from "../../utils/constants";
-import useUser from "../authentication/useUser";
 
 const StlyedActor = styled.div`
   padding-right: 40px;
@@ -96,12 +95,8 @@ const EditModel = styled.ul`
   }
 `;
 
-function Actor({ post, setShowEditPost, showEditPost }) {
-  const { userDetail, isLoadingUserDetail } = useUserDetail(
-    post.userCreatedPost,
-  );
-  const { user } = useUser();
-
+function Actor({ post, setShowEditPost, showEditPost, user }) {
+  const { userDetail } = useUserDetail(post.userCreatedPost);
   return (
     <StlyedActor>
       <a href="/feed">
@@ -126,12 +121,14 @@ function Actor({ post, setShowEditPost, showEditPost }) {
       </button>
       {showEditPost === post.postId && (
         <EditModel>
-          <li>
-            <PiWarningFill />
-            <div>
-              <h6>Report user</h6>
-            </div>
-          </li>
+          {userDetail?.userId !== user.userId && (
+            <li>
+              <PiWarningFill />
+              <div>
+                <h6>Report user</h6>
+              </div>
+            </li>
+          )}
           {post.userCreatedPost === user.userId && (
             <>
               <li

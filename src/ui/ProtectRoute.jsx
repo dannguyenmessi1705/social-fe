@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import { cloneElement } from "react";
 
 import Spinner from "./Spinner";
 import useUser from "../features/authentication/useUser";
@@ -25,7 +26,7 @@ function ProtectRoute({ children }) {
         <Spinner />
       </FullPage>
     );
-  if (user) return children;
+  if (user) return cloneElement(children, { user: user });
 }
 
 export default ProtectRoute;

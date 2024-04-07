@@ -13,7 +13,7 @@ import { API_URL } from "../utils/constants";
 
 /*________________________________________________________________________________*/
 
-const Main = ({user}) => {
+const Main = ({ user }) => {
   const { posts, isLoadingPosts } = useGetAllPost();
   const [posts1, setPosts1] = useState([]);
   const [showModel, setShowModel] = useState(false);
@@ -26,18 +26,6 @@ const Main = ({user}) => {
   const hideModel = () => {
     setShowModel(false);
   };
-
-  //   const uploadPost = useCallback(
-  // (post) => {
-  //   // Upload File.
-  //   const storageRef = ref(
-  //     storage,
-  //     post.image ? `images/${post.image.name}` : `vedios/${post.vedio.name}`
-  //   );
-  //   const upload = uploadBytesResumable(
-  //     storageRef,
-  //     post.image ? post.image : post.vedio
-  //   );
 
   //       // Listen for state changes, errors, and completion.
   //       upload.on(
@@ -145,6 +133,7 @@ const Main = ({user}) => {
               post={post}
               setShowEditPost={setShowEditPost}
               showEditPost={showEditPost}
+              user={user}
             />
             <Description>{post?.title}</Description>
             <SocialContents>
@@ -194,11 +183,7 @@ const Main = ({user}) => {
           </Article>
         ))}
       {showModel && (
-        <PostModel
-          close={hideModel}
-          addPost={setPosts1}
-          //   uploadPost={uploadPost}
-        />
+        <PostModel close={hideModel} addPost={setPosts1} user={user} />
       )}
     </div>
   );

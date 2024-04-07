@@ -8,7 +8,6 @@ const Container = styled.div`
   background-color: #f5f5f5;
 `;
 
-
 const Layout = styled.div`
   display: grid;
   grid-template-columns: auto 1fr auto;
@@ -23,14 +22,13 @@ const Layout = styled.div`
   }
 `;
 
-
-function AppLayout() {
+function AppLayout({ user }) {
   return (
     <>
-      <Header />
+      <Header user={user} />
       <Container>
         <Layout>
-          <Outlet />
+          <Outlet context={{ user }} />
         </Layout>
       </Container>
     </>

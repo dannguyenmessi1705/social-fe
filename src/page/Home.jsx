@@ -1,15 +1,13 @@
-import useUser from "../features/authentication/useUser";
+import { useOutletContext } from "react-router-dom";
+
 import LeftSide from "../ui/LeftSide";
 import Main from "../ui/Main";
 import RightSide from "../ui/RightSide";
-import Spinner from "../ui/Spinner";
 
-/*________________________________________________________________________________*/
 
-const Home = (props) => {
+const Home = () => {
+  const { user } = useOutletContext();
   document.title = "Feed | Linkedin";
-  const { user, isLoading } = useUser();
-  if (isLoading) return <Spinner />;
   return (
     <>
       <LeftSide user={user} />

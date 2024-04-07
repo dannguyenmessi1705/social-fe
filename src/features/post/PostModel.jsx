@@ -9,9 +9,8 @@ import useUser from "../authentication/useUser";
 import { API_URL } from "../../utils/constants";
 import Spinner from "../../ui/Spinner";
 
-const PostModel = ({ close, addPost }) => {
+const PostModel = ({ close, user }) => {
   const { uploadPost, isUploadingPost } = useUploadPost();
-  const { user, isLoading } = useUser();
   const [title, setTitle] = useState("");
   const [body, setBody] = useState("");
   const sharedImage = useRef();
@@ -37,86 +36,82 @@ const PostModel = ({ close, addPost }) => {
 
   return (
     <Container>
-      {isLoading ? (
-        <Spinner />
-      ) : (
-        <Content>
-          <Header>
-            <h2>Create a post</h2>
-            <IoCloseSharp
-              className="cursor-pointer rounded-full border p-1 text-3xl hover:bg-slate-400"
-              onClick={() => {
-                reset();
-                close();
-              }}
-            />
-          </Header>
+      <Content>
+        <Header>
+          <h2>Create a post</h2>
+          <IoCloseSharp
+            className="cursor-pointer rounded-full border p-1 text-3xl hover:bg-slate-400"
+            onClick={() => {
+              reset();
+              close();
+            }}
+          />
+        </Header>
 
-          <SharedContent>
-            <UserInfo>
-              <img src={`${API_URL}/images/${user?.avatar}`} alt="user" />
-              <span>{user?.fullName}</span>
-            </UserInfo>
+        <SharedContent>
+          <UserInfo>
+            <img src={`${API_URL}/images/${user?.avatar}`} alt="user" />
+            <span>{user?.fullName}</span>
+          </UserInfo>
 
-            <Description>
-              <input
-                value={title}
-                onChange={(e) => setTitle(e.currentTarget.value)}
-                autoFocus={true}
-                placeholder="Title post"
-              ></input>
-            </Description>
+          <Description>
+            <input
+              value={title}
+              onChange={(e) => setTitle(e.currentTarget.value)}
+              autoFocus={true}
+              placeholder="Title post"
+            ></input>
+          </Description>
 
-            <Description>
-              <textarea
-                value={body}
-                onChange={(e) => setBody(e.currentTarget.value)}
-                autoFocus={true}
-                placeholder="What do you want to talk about?"
-              ></textarea>
-            </Description>
+          <Description>
+            <textarea
+              value={body}
+              onChange={(e) => setBody(e.currentTarget.value)}
+              autoFocus={true}
+              placeholder="What do you want to talk about?"
+            ></textarea>
+          </Description>
 
-            <Uploads>
-              {image && (
-                <IoCloseSharp
-                  className="cursor-pointer rounded-full border p-1 text-3xl hover:bg-slate-400"
-                  onClick={() => {
-                    setImage(null);
-                  }}
-                />
-              )}
-            </Uploads>
+          <Uploads>
+            {image && (
+              <IoCloseSharp
+                className="cursor-pointer rounded-full border p-1 text-3xl hover:bg-slate-400"
+                onClick={() => {
+                  setImage(null);
+                }}
+              />
+            )}
+          </Uploads>
 
-            <Actions>
-              <div className="editor">
-                <button
-                  disabled={image}
-                  onClick={() => sharedImage.current.click()}
-                  className="rounded-full px-2 py-1 hover:bg-slate-400"
-                >
-                  <SlPicture className="text-3xl" />
-                  <input
-                    ref={sharedImage}
-                    onChange={(e) => setImage(e.target.files[0])}
-                    type="file"
-                    accept="image/*"
-                    name="postImg"
-                    hidden
-                  />
-                </button>
-              </div>
-
+          <Actions>
+            <div className="editor">
               <button
-                disabled={!body.trim() || !title.trim() || isUploadingPost}
-                className="post"
-                onClick={postArticleHandler}
+                disabled={image}
+                onClick={() => sharedImage.current.click()}
+                className="rounded-full px-2 py-1 hover:bg-slate-400"
               >
-                Post
+                <SlPicture className="text-3xl" />
+                <input
+                  ref={sharedImage}
+                  onChange={(e) => setImage(e.target.files[0])}
+                  type="file"
+                  accept="image/*"
+                  name="postImg"
+                  hidden
+                />
               </button>
-            </Actions>
-          </SharedContent>
-        </Content>
-      )}
+            </div>
+
+            <button
+              disabled={!body.trim() || !title.trim() || isUploadingPost}
+              className="post"
+              onClick={postArticleHandler}
+            >
+              Post
+            </button>
+          </Actions>
+        </SharedContent>
+      </Content>
     </Container>
   );
 };
