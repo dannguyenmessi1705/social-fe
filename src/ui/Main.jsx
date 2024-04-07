@@ -10,11 +10,13 @@ import Spinner from "./Spinner";
 import useGetAllPost from "../features/post/useGetAllPost";
 
 import { API_URL } from "../utils/constants";
+import useLikePost from "../features/post/useLikePost";
 
 /*________________________________________________________________________________*/
 
 const Main = ({ user }) => {
   const { posts, isLoadingPosts } = useGetAllPost();
+  const { likePost, isLikingPost, unlikePost, isUnlikingPost } = useLikePost();
   const [posts1, setPosts1] = useState([]);
   const [showModel, setShowModel] = useState(false);
   const [showComments, setShowComments] = useState([]);
@@ -26,79 +28,6 @@ const Main = ({ user }) => {
   const hideModel = () => {
     setShowModel(false);
   };
-
-  //       // Listen for state changes, errors, and completion.
-  //       upload.on(
-  //         "state_changed",
-  //         (snapshot) => {
-  //           console.log(snapshot);
-  //           const progress =
-  //             (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-  //           setLoad(progress);
-  //           if (snapshot.state === "RUNNING") {
-  //             setLoad(progress);
-  //           }
-  //         },
-  //         (error) => {
-  //           console.log(error.code);
-  //         },
-  //         async () => {
-  //           const url = await getDownloadURL(upload.snapshot.ref);
-  //           // Add to DataBase
-  //           await addDoc(collection(db, "Articles"), {
-  //             user: {
-  //               name: user.displayName,
-  //               title: user.email,
-  //               photo: user.photoURL,
-  //             },
-  //             date: Timestamp.now(),
-  //             sharedImage: post.image ? url : "",
-  //             sharedVedio: post.vedio ? url : "",
-  //             description: post.text,
-  //             comments: [],
-  //             likes: [],
-  //           });
-  //           setLoad();
-  //         }
-  //       );
-  //     },
-  //     [user]
-  //   );
-
-  //   useEffect(() => {
-  //     const getPosts = async () => {
-  //       const q = await query(
-  //         collection(db, "Articles"),
-  //         orderBy("date", "desc")
-  //       );
-  //       onSnapshot(q, (querySnapshot) => {
-  //         let arr = [];
-  //         querySnapshot.forEach((doc) => {
-  //           arr.push({ post: doc.data(), postID: doc.id });
-  //         });
-
-  //         setPosts1(arr);
-  //       });
-  //     };
-  //     getPosts();
-  //   }, [uploadPost]);
-
-  //   // Implent Like and unLike
-  //   const fetchLikes = (postId, likes) => {
-  //     updateDoc(doc(db, "Articles", postId), {
-  //       likes: likes.some((l) => l.email === user.email)
-  //         ? likes.filter((l) => l.email !== user.email)
-  //         : [
-  //             { name: user.displayName, email: user.email, photo: user.photoURL },
-  //             ...likes,
-  //           ],
-  //     });
-  //   };
-
-  //   // Delete Post
-  //   const deletePost = (postID) => {
-  //     deleteDoc(doc(db, "Articles", postID));
-  //   };
 
   return (
     <div>
@@ -152,17 +81,24 @@ const Main = ({ user }) => {
             </SocialContents>
             <SocialActions>
               <button
-              // className={
-              //   post.likes.some((l) => l.email === user.email) ? "active" : ""
-              // }
-              // onClick={(e) => {
-              //   fetchLikes(postID, post.likes);
-              // }}
+                onClick={() =>
+                  post.userLikedPost.includes(user.userId)
+                    ? unlikePost(post.postId)
+                    : likePost(post.postId)
+                }
+                disabled={isLikingPost || isUnlikingPost}
               >
-                <AiOutlineLike />
-                <AiFillLike className="text-blue-600" />
-
-                <span className="text-blue-600">Like</span>
+                {post.userLikedPost.includes(user.userId) ? (
+                  <>
+                    <AiFillLike className="text-blue-600" />
+                    <span className="text-blue-600">Like</span>
+                  </>
+                ) : (
+                  <>
+                    <AiOutlineLike />
+                    <span>Like</span>
+                  </>
+                )}
               </button>
 
               <button
@@ -182,9 +118,7 @@ const Main = ({ user }) => {
             )} */}
           </Article>
         ))}
-      {showModel && (
-        <PostModel close={hideModel} user={user} />
-      )}
+      {showModel && <PostModel close={hideModel} user={user} />}
     </div>
   );
 };
