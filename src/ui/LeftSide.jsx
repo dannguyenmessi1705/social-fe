@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import styled from "styled-components";
+import { CgProfile } from "react-icons/cg";
 
 import useUser from "../features/authentication/useUser";
 
@@ -10,8 +11,8 @@ import useUserDetail from "../features/user/useUserDetail";
 
 const LeftSide = (props) => {
   const { user, isLoading } = useUser();
-  const { userDetail, isLoadingUserDetail } = useUserDetail(user.userId);
-  console.log(userDetail)
+  const { userDetail } = useUserDetail(user.userId);
+  console.log(userDetail);
 
   return (
     <div>
@@ -30,23 +31,31 @@ const LeftSide = (props) => {
           </Link>
         </UserInfo>
         <Widget>
-          <a href="/feed">
+          <Link to="/myfollowers">
             <div>
               <span>Followers</span>
             </div>
-            <p>130</p>
-          </a>
+            <p>{userDetail?.followers}</p>
+          </Link>
+          <Link to="/myfollowings">
+            <div>
+              <span>Followings</span>
+            </div>
+            <p>{userDetail?.followings}</p>
+          </Link>
         </Widget>
         <Item>
-          <span>
-            <img src="/Images/item-icon.svg" alt="" />
-            My Items
-          </span>
+          <Link to="/profiles">
+            <span>
+              <CgProfile className="mr-1" />
+              My Profiles
+            </span>
+          </Link>
         </Item>
       </ArtCard>
 
       <CommunityCard>
-        <Link to="/feed">
+        <Link to="/groups">
           <span>Groups</span>
         </Link>
         <Link to="/feed">
@@ -57,9 +66,6 @@ const LeftSide = (props) => {
         </Link>
         <Link to="/feed">
           <span>Follow Hashtags</span>
-        </Link>
-        <Link to="/feed">
-          <span>Discover more</span>
         </Link>
       </CommunityCard>
     </div>
