@@ -2,15 +2,11 @@ import { Link } from "react-router-dom";
 import styled from "styled-components";
 import { CgProfile } from "react-icons/cg";
 
-import useUser from "../features/authentication/useUser";
-
 import { API_URL } from "../utils/constants";
 import Item from "./Item";
-import SpinnerMini from "./SpinnerMini";
 import useUserDetail from "../features/user/useUserDetail";
 
-const LeftSide = (props) => {
-  const { user, isLoading } = useUser();
+const LeftSide = ({ user }) => {
   const { userDetail } = useUserDetail(user.userId);
   console.log(userDetail);
 
@@ -20,13 +16,7 @@ const LeftSide = (props) => {
         <UserInfo>
           <CardBackground />
           <Link className="text-lg font-semibold text-slate-800" to="/user">
-            {isLoading ? (
-              <Photo>
-                <SpinnerMini />
-              </Photo>
-            ) : (
-              <Photo src={`${API_URL}/images/${user.avatar}`} />
-            )}
+            <Photo src={`${API_URL}/images/${user.avatar}`} />
             <span>Welcome, {user.fullName}</span>
           </Link>
         </UserInfo>

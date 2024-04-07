@@ -2,7 +2,8 @@ import styled from "styled-components";
 import useUserDetail from "../user/useUserDetail";
 
 import { SlOptionsVertical } from "react-icons/sl";
-import { FaBookmark, FaEdit, FaTrash } from "react-icons/fa";
+import { FaEdit, FaTrash } from "react-icons/fa";
+import { PiWarningFill } from "react-icons/pi";
 import { API_URL } from "../../utils/constants";
 import useUser from "../authentication/useUser";
 
@@ -126,10 +127,9 @@ function Actor({ post, setShowEditPost, showEditPost }) {
       {showEditPost === post.postId && (
         <EditModel>
           <li>
-            <FaBookmark />
-            <div className="info">
-              <h6>Save</h6>
-              <span>Save for later</span>
+            <PiWarningFill />
+            <div>
+              <h6>Report user</h6>
             </div>
           </li>
           {post.userCreatedPost === user.userId && (

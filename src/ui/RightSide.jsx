@@ -2,7 +2,7 @@ import styled from "styled-components";
 
 /*________________________________________________________________________________*/
 
-const RightSide = (props) => {
+const RightSide = ({ user }) => {
   return (
     <div>
       <FollowCard>

@@ -7,15 +7,13 @@ import Actor from "../features/post/Actor";
 import PostModel from "../features/post/PostModel";
 import Comment from "./Comment";
 import Spinner from "./Spinner";
-import useUser from "../features/authentication/useUser";
 import useGetAllPost from "../features/post/useGetAllPost";
 
 import { API_URL } from "../utils/constants";
 
 /*________________________________________________________________________________*/
 
-const Main = () => {
-  const { user, isLoading } = useUser();
+const Main = ({user}) => {
   const { posts, isLoadingPosts } = useGetAllPost();
   const [posts1, setPosts1] = useState([]);
   const [showModel, setShowModel] = useState(false);
