@@ -47,3 +47,18 @@ export async function createPost(post) {
     throw new Error("Create post failed");
   }
 }
+
+export async function deletePost(postId) {
+  try {
+    const token = JSON.parse(localStorage.getItem("user")).accessToken;
+    const data = await axios.delete(`${API_URL}/post/delete/${postId}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    const result = await data.data;
+    return result;
+  } catch (error) {
+    throw new Error("Delete post failed");
+  }
+}

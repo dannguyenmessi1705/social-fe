@@ -5,6 +5,7 @@ import { SlOptionsVertical } from "react-icons/sl";
 import { FaEdit, FaTrash } from "react-icons/fa";
 import { PiWarningFill } from "react-icons/pi";
 import { API_URL } from "../../utils/constants";
+import useDeletePost from "./useDeletePost";
 
 const StlyedActor = styled.div`
   padding-right: 40px;
@@ -84,19 +85,12 @@ const EditModel = styled.ul`
       color: rgba(0, 0, 0, 1);
       font-weight: 600;
     }
-    .info {
-      text-align: start;
-      span {
-        font-size: 12px;
-        display: block;
-        color: rgba(0, 0, 0, 0.6);
-      }
-    }
   }
 `;
 
 function Actor({ post, setShowEditPost, showEditPost, user }) {
   const { userDetail } = useUserDetail(post.userCreatedPost);
+  const { deletePost } = useDeletePost();
   return (
     <StlyedActor>
       <a href="/feed">
@@ -137,9 +131,7 @@ function Actor({ post, setShowEditPost, showEditPost, user }) {
                 <FaEdit />
                 <h6>Edit post</h6>
               </li>
-              <li
-              //onClick={() => deletePost(postID)}
-              >
+              <li onClick={() => deletePost(post.postId)}>
                 <FaTrash />
                 <h6>Delete post</h6>
               </li>
