@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useState } from "react";
 import { AiFillLike, AiOutlineLike } from "react-icons/ai";
 import { FaRegComment } from "react-icons/fa";
 
@@ -107,20 +107,22 @@ const Main = ({ user }) => {
               </button>
 
               <button
-              //onClick={() => setShowComments((prev) => [...prev, id])}
+                onClick={() =>
+                  setShowComments((prev) => [...prev, post.postId])
+                }
               >
                 <FaRegComment />
                 <span>Comment</span>
               </button>
             </SocialActions>
-            {/* {showComments.includes(id) && (
+            {showComments.includes(post.postId) && (
               <Comment
-                // photo={user?.photoURL}
-                // comments={post.comments}
-                // user={user}
-                postID={postID}
+                photo={user?.avatar}
+                comments={post.comments}
+                user={user}
+                postId={post.postId}
               />
-            )} */}
+            )}
           </Article>
         ))}
       {showModel && (
